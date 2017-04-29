@@ -11,6 +11,7 @@ class Chart extends React.Component {
   }
 
   componentDidMount() {
+    // on mount, grab this node and append d3 scatterplot to it
     const { dataset, xKey, yKey, height, width, padding } = this.props;
     const node =  ReactDOM.findDOMNode(this);
     const scatterplot = new Scatterplot(node, {
@@ -30,7 +31,7 @@ class Chart extends React.Component {
 
   render(){
     return (
-      <div id="chart"></div>
+      <section id="chart"></section>
     );
   }
 }

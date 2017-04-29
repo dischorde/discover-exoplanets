@@ -1,5 +1,6 @@
 class Scatterplot {
   constructor(node, props) {
+    // save properties
     this.width = props.width;
     this.height = props.height;
     this.padding = props.padding;
@@ -7,11 +8,6 @@ class Scatterplot {
     this.drawChart = this.drawChart.bind(this);
     this.setScales = this.setScales.bind(this);
     this.drawLegend = this.drawLegend.bind(this);
-
-    this.svg = d3.select(node)
-                 .append('svg')
-                 .attr('width', props.width)
-                 .attr('height', props.height);
 
     this.colorScale = d3.scaleOrdinal()
                        .range(['#85992C',
@@ -24,10 +20,16 @@ class Scatterplot {
                                 "rocky-iron",
                                 "rocky-water",
                                 "iron"]);
+
+    // add svg to DOM
+    this.svg = d3.select(node)
+      .append('svg')
+      .attr('width', props.width)
+      .attr('height', props.height);
   }
 
   drawLegend() {
-    let legend = this.svg.append("g").attr("class", "legend");
+    let legend = this.svg.append("g");
     legend.selectAll("rect")
          .data(this.colorScale.domain())
          .enter()
@@ -49,14 +51,29 @@ class Scatterplot {
          .text(d => d);
   }
 
+  setScales(dataset, xKey, yKey) {
+    this.xScale = d3.scaleLinear()
+                    .range([this.padding, this.width - this.padding])
+                    .domain(d3.extent(dataset, (d) => Number(d[xKey])))
+                    .nice();
+
+    this.yScale = d3.scaleLinear()
+                    .range([this.height - this.padding, this.padding])
+                    .domain(d3.extent(dataset, (d) => Number(d[yKey])))
+                    .nice();
+  }
+
   drawChart(dataset, xKey, yKey) {
+    // filter data to remove empty values or other not numerical datapoints
     const filteredData = dataset.filter(datapoint => (
       (datapoint[xKey]) && datapoint[yKey]) &&
       (datapoint[xKey].trim() !== "" && datapoint[yKey].trim() !== "")
     );
 
+    // create or update scales to fit data
     this.setScales(filteredData, xKey, yKey);
 
+    // add data points
     this.svg.selectAll("circle")
       .data(filteredData)
       .enter()
@@ -66,6 +83,7 @@ class Scatterplot {
       .attr("cy", d => this.yScale(Number(d[yKey])))
       .attr("r", d => 2);
 
+    // add axes and legend
     const xAxis = d3.axisBottom(this.xScale);
     const yAxis = d3.axisLeft(this.yScale);
 
@@ -81,20 +99,9 @@ class Scatterplot {
   }
 
   updateChart(dataset, xKey, yKey) {
+    // remove old chart and redraw with new data
     this.svg.selectAll("*").remove();
     this.drawChart(dataset, xKey, yKey);
-  }
-
-  setScales(dataset, xKey, yKey) {
-    this.xScale = d3.scaleLinear()
-                    .range([this.padding, this.width - this.padding])
-                    .domain(d3.extent(dataset, (d) => Number(d[xKey])))
-                    .nice();
-
-    this.yScale = d3.scaleLinear()
-                    .range([this.height - this.padding, this.padding])
-                    .domain(d3.extent(dataset, (d) => Number(d[yKey])))
-                    .nice();
   }
 }
 
