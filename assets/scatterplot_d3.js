@@ -42,20 +42,21 @@ class Scatterplot {
         .call(yAxis);
   }
 
-  //TODO: determine best method for scaling domain & axes
+  updateChart(dataset, xKey, yKey) {
+    this.svg.selectAll("*").remove();
+    this.drawChart(dataset, xKey, yKey);
+  }
+
   setScales(dataset, xKey, yKey) {
     this.xScale = d3.scaleLinear()
                     .range([this.padding, this.width - this.padding])
                     .domain(d3.extent(dataset, (d) => Number(d[xKey])))
                     .nice();
-                    // .domain([0, d3.max(dataset, (d) => Number(d[xKey]))])
 
     this.yScale = d3.scaleLinear()
                     .range([this.height - this.padding, this.padding])
                     .domain(d3.extent(dataset, (d) => Number(d[yKey])))
                     .nice();
-                    // .domain([d3.min(dataset, (d) => Number(d[yKey])),
-                    // d3.max(dataset, (d) => Number(d[yKey]))]);
   }
 }
 
