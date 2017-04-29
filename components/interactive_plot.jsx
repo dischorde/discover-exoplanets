@@ -1,30 +1,28 @@
 import React from 'react';
 import Chart from './chart.jsx';
 
-// data for testing
-const dataset = [
-                 [ 34,     78 ],
-                 [ 109,   280 ],
-                 [ 310,   120 ],
-                 [ 79,   411 ],
-                 [ 420,   220 ],
-                 [ 233,   145 ],
-                 [ 333,   96 ],
-                 [ 222,    333 ],
-                 [ 78,    320 ],
-                 [ 21,   123 ]
-               ];
-
 class InteractivePlot extends React.Component{
   constructor(props){
     super(props);
+    this.state = {
+      xKey: "P. Mass (EU)",
+      yKey: "P. Gravity (EU)"
+    };
   }
 
   render(){
+    const {xKey, yKey} = this.state;
+
     return (
       <div>
         <h1>Exoplanet Data Explorer</h1>
-          <Chart dataset={dataset} xKey={0} yKey={1} />
+          <h2>{`${xKey} vs. ${yKey}`}</h2>
+          <Chart dataset={this.props.data}
+                 xKey={xKey}
+                 yKey={yKey}
+                 height={500}
+                 width={800}
+                 padding={40} />
       </div>
     );
   }

@@ -11,13 +11,14 @@ class Chart extends React.Component{
   }
 
   componentDidMount() {
+    const { dataset, xKey, yKey, height, width, padding } = this.props;
     const el =  ReactDOM.findDOMNode(this);
     const scatterplot = new Scatterplot(el, {
-      height: 500,
-      width: 500,
-      padding: 60
+      height,
+      width,
+      padding
     });
-    scatterplot.drawChart(this.props.dataset, this.props.xKey, this.props.yKey);
+    scatterplot.drawChart(dataset, xKey, yKey);
     this.setState({ scatterplot });
   }
 
