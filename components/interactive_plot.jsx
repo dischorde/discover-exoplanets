@@ -23,25 +23,35 @@ class InteractivePlot extends React.Component{
     const {xKey, yKey} = this.state;
 
     return (
-      <div>
+      <section className="interactive-plot">
         <h1>Exoplanet Data Explorer</h1>
 
-        <Dropdown axis={"xKey"}
-                  columns={this.props.columns}
-                  handleChange={this.handleChange("xKey")}/>
+        <section className="axes-info">
+          <div className="axis-changer">
+            <h3>X-Axis</h3>
+            <Dropdown axis={"xKey"}
+              columns={this.props.columns}
+              selected={this.state.xKey}
+              handleChange={this.handleChange("xKey")}/>
+          </div>
 
-        <Dropdown axis={"yKey"}
-                  columns={this.props.columns}
-                  handleChange={this.handleChange("yKey")}/>
+          <div className="axis-changer">
+            <h3>Y-Axis</h3>
+            <Dropdown axis={"yKey"}
+              columns={this.props.columns}
+              selected={this.state.yKey}
+              handleChange={this.handleChange("yKey")}/>
+          </div>
+        </section>
 
-          <h2>{`${xKey} vs. ${yKey}`}</h2>
           <Chart dataset={this.props.data}
                  xKey={xKey}
                  yKey={yKey}
-                 height={500}
-                 width={800}
+                 height={.72 * window.innerHeight}
+                 width={.8 * window.innerWidth}
                  padding={40} />
-      </div>
+          <h2>{`${xKey} vs. ${yKey}`}</h2>
+      </section>
     );
   }
 }

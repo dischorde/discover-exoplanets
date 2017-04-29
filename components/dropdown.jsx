@@ -8,11 +8,11 @@ class Dropdown extends React.Component {
 
   render() {
     let options = this.props.columns.map((title, i) => (
-      <option key={`${this.props.axis}${i}`} value={title}>{title}</option>
+      <option key={`${this.props.axis}${i}`} value={title} >{title}</option>
     ));
 
     return (
-      <select onChange={this.props.handleChange}>
+      <select onChange={this.props.handleChange} value={this.props.selected}>
         { options }
       </select>
     );

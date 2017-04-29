@@ -12,8 +12,8 @@ class Chart extends React.Component {
 
   componentDidMount() {
     const { dataset, xKey, yKey, height, width, padding } = this.props;
-    const el =  ReactDOM.findDOMNode(this);
-    const scatterplot = new Scatterplot(el, {
+    const node =  ReactDOM.findDOMNode(this);
+    const scatterplot = new Scatterplot(node, {
       height,
       width,
       padding
@@ -22,9 +22,9 @@ class Chart extends React.Component {
     this.setState({ scatterplot });
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.xKey !== this.props.xKey || newProps.yKey !== this.props.yKey) {
-      this.state.scatterplot.updateChart(newProps.dataset, newProps.xKey, newProps.yKey);
+  componentWillReceiveProps({ dataset, xKey, yKey }) {
+    if (xKey !== this.props.xKey || yKey !== this.props.yKey) {
+      this.state.scatterplot.updateChart(dataset, xKey, yKey);
     }
   }
 

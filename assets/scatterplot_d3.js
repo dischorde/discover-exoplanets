@@ -1,15 +1,28 @@
 class Scatterplot {
-  constructor(el, props) {
+  constructor(node, props) {
     this.width = props.width;
     this.height = props.height;
     this.padding = props.padding;
+
     this.drawChart = this.drawChart.bind(this);
     this.setScales = this.setScales.bind(this);
 
-    this.svg = d3.select(el)
+    this.svg = d3.select(node)
                  .append('svg')
                  .attr('width', props.width)
                  .attr('height', props.height);
+
+    this.colorScale = d3.scaleOrdinal()
+                       .range(['#85992C',
+                               '#8C19C1',
+                               '#C61C6F',
+                               '#B58929',
+                               '#268BD2'])
+                       .domain(["water-gas",
+                                "gas",
+                                "rocky-iron",
+                                "rocky-water",
+                                "iron"]);
   }
 
   drawChart(dataset, xKey, yKey) {
@@ -17,8 +30,6 @@ class Scatterplot {
       (datapoint[xKey]) && datapoint[yKey]) &&
       (datapoint[xKey].trim() !== "" && datapoint[yKey].trim() !== "")
     );
-
-    window.filtered = filteredData;
 
     this.setScales(filteredData, xKey, yKey);
 
@@ -32,12 +43,11 @@ class Scatterplot {
        .attr("r", d => 2);
 
      const xAxis = d3.axisBottom(this.xScale);
+     const yAxis = d3.axisLeft(this.yScale);
 
      this.svg.append("g")
         .attr("transform", "translate(0," + (this.height - this.padding) + ")")
         .call(xAxis);
-
-     const yAxis = d3.axisLeft(this.yScale);
 
      this.svg.append("g")
         .attr("transform", "translate("+ this.padding + ", 0)")
@@ -59,10 +69,6 @@ class Scatterplot {
                     .range([this.height - this.padding, this.padding])
                     .domain(d3.extent(dataset, (d) => Number(d[yKey])))
                     .nice();
-
-    this.colorScale = d3.scaleOrdinal()
-                      .range(['#85992C','#8C19C1', '#C61C6F', '#B58929', '#268BD2'])
-                      .domain(["water-gas", "gas", "rocky-iron", "rocky-water", "iron"]);
   }
 }
 
